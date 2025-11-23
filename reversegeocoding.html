@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Large and Mega Projects Unit — Reverse Geocoding</title>
+  <style>
+    :root{
+      --p1:#4A1767;
+      --p2:#5A1B75;
+      --p3:#6A1F85;
+      --page-bg:#f5f6fb;
+      --card-bg:#ffffff;
+      --muted:#6b7280;
+      --cell-border:#e6e6ea;
+    }
+
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;background:var(--page-bg);-webkit-font-smoothing:antialiased;}
+    /* header */
+    .header{
+      background: linear-gradient(90deg,var(--p1),var(--p2),var(--p3));
+      color:#fff;
+      padding:34px 20px;
+      border-bottom-left-radius:14px;
+      border-bottom-right-radius:14px;
+      position:relative;
+      box-shadow:0 12px 40px rgba(0,0,0,0.12);
+    }
+    .header .title{
+      text-align:center;
+      font-size:28px;
+      font-weight:700;
+      margin:0;
+    }
+    .header .subtitle{
+      text-align:center;
+      margin-top:6px;
+      font-size:18px;
+      font-weight:500;
+      opacity:.95;
+    }
+
+    /* datetime - aligned on the right, slightly lower to be aligned with title */
+    .datetime-box{
+      position:absolute;
+      right:28px;
+      top:34px; /* pulled down a bit */
+      text-align:right;
+      color:white;
+      font-weight:700;
+      line-height:1.2;
+      font-size:15px;
+    }
+    .datetime-box .time { display:block; margin-top:6px; font-size:15px; margin-left:-22px }
+    .time-anim { animation: fadeTime 1s ease-in-out infinite alternate; }
+    @keyframes fadeTime { from{opacity:0.78} to{opacity:1} }
+
+    /* logout button on header */
+    #logoutBtn{
+      position:absolute;
+      right:28px;
+      bottom:18px;
+      display:none;
+      background:transparent;
+      color:#fff;
+      border:1px solid rgba(255,255,255,0.18);
+      padding:6px 12px;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:600;
+      backdrop-filter: blur(6px);
+    }
+    #logoutBtn:hover{background:rgba(255,255,255,0.06)}
+
+    /* main container */
+    .wrap{max-width:980px;margin:26px auto;padding:0 16px;box-sizing:border-box}
+    /* login card centered and compact */
+    #loginCard{
+      max-width:420px;
+      margin:36px auto;
+      padding:22px;
+      background:var(--card-bg);
+      border-radius:12px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.10);
+    }
+    label{display:block;margin-bottom:6px;color:var(--muted);font-weight:700}
+    input[type="text"], input[type="password"]{
+      width:100%;
+      padding:7px 10px;
+      font-size:14px;
+      height:36px;
+      border-radius:8px;
+      border:1px solid #ddd;
+      box-sizing:border-box;
+    }
+    .btn{
+      padding:10px 26px;
+      border-radius:10px;
+      background:linear-gradient(90deg,var(--p1),var(--p2),var(--p3));
+      color:#fff;
+      border:0;
+      cursor:pointer;
+      font-weight:700;
+      font-size:15px;
+      box-shadow:0 6px 18px rgba(74,23,103,0.18);
+    }
+    .btn:active{transform:translateY(1px)}
+    .center-row{text-align:center;margin-top:14px}
+    .login-msg{color:#b00020;text-align:center;margin-top:12px;min-height:20px}
+
+    /* main app card */
+    #mainCard{
+      display:none;
+      background:var(--card-bg);
+      border-radius:12px;
+      padding:18px;
+      box-shadow:0 8px 26px rgba(0,0,0,0.06);
+    }
+
+    /* inputs layout */
+    .inputs{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+    .col{flex:1;min-width:160px}
+    .col label{font-weight:700}
+    input.box{padding:6px 10px;height:34px;font-size:14px}
+
+    /* buttons center with medium gap 20px */
+    .btn-row{display:flex;justify-content:center;gap:20px;margin:8px 0 16px}
+    .btn.small{padding:9px 22px;font-size:14px;border-radius:10px}
+
+    /* section title */
+    .section-title{text-align:center;font-weight:700;margin:8px 0 12px;color:#0f1724;font-size:18px}
+
+    /* results area - auto height */
+    .results-area{border-radius:8px;border:1px solid #f0f0f2;overflow:hidden;padding:0}
+    .result-row{display:flex;border-bottom:1px solid var(--cell-border);align-items:stretch}
+    .cell-left{
+      width:260px;min-width:150px;padding:12px 14px;color:#fff;font-weight:700;
+      background:linear-gradient(135deg, rgba(74,23,103,0.62), rgba(90,27,117,0.40));
+      backdrop-filter: blur(8px);
+      display:flex;align-items:center;
+      border-right:1px solid rgba(255,255,255,0.06);
+    }
+    .cell-right{flex:1;padding:12px 14px;background:#fff;color:#111827;border-left:1px solid var(--cell-border)}
+    .cell-right .muted{color:var(--muted);font-size:13px}
+
+    /* show button & raw json area */
+    .after-table{display:flex;flex-direction:column;align-items:center;margin-top:12px}
+    .raw-panel{display:none;width:100%;margin-top:10px;border-radius:8px;overflow:hidden;border:1px solid var(--cell-border);background:#0f1724}
+    .raw-panel pre{margin:0;padding:12px;color:#e6eef8;white-space:pre-wrap;font-size:13px;line-height:1.45}
+
+    .powered{text-align:center;color:var(--muted);margin-top:8px;font-size:13px}
+
+    /* responsive */
+    @media (max-width:720px){
+      .datetime-box{right:16px;top:18px;font-size:13px}
+      .cell-left{width:140px}
+      .inputs{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="title">Large and Mega Projects Unit</div>
+    <div class="subtitle">Reverse Geocoding</div>
+
+    <div class="datetime-box" aria-hidden="false">
+      <div id="currentDate">Wednesday, 19 November 2025</div>
+      <div id="currentTime" class="time time-anim">01:14 PM</div>
+    </div>
+
+    <button id="logoutBtn" title="Logout">Logout</button>
+  </div>
+
+  <div class="wrap">
+
+    <!-- LOGIN CARD (centered) -->
+    <div id="loginCard" role="dialog" aria-label="Login">
+      <label for="username">Username</label>
+      <input id="username" type="text" autocomplete="username"/>
+
+      <label for="password" style="margin-top:10px">Password</label>
+      <input id="password" type="password" autocomplete="current-password"/>
+
+      <div class="center-row" style="margin-top:12px">
+        <button id="loginBtn" class="btn">Login</button>
+      </div>
+
+      <div id="loginMsg" class="login-msg" aria-live="polite"></div>
+    </div>
+
+    <!-- Main app -->
+    <div id="mainCard" aria-live="polite">
+      <div class="inputs" style="margin-top:4px">
+        <div class="col">
+          <label for="lat">Latitude</label>
+          <input id="lat" class="box" type="text" value="30.0444"/>
+        </div>
+        <div class="col">
+          <label for="lng">Longitude</label>
+          <input id="lng" class="box" type="text" value="31.2357"/>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button id="convertBtn" class="btn small">Convert</button>
+        <button id="clearBtn" class="btn small">Clear</button>
+      </div>
+
+      <div class="section-title">Result Details</div>
+
+      <!-- Results container (auto height) -->
+      <div id="resultsContainer" class="results-area" role="region" aria-live="polite">
+        <div class="result-row">
+          <div class="cell-left">Status</div>
+          <div class="cell-right"><div class="muted">No results yet. Click Convert.</div></div>
+        </div>
+      </div>
+
+      <!-- Show button (under table) -->
+      <div class="after-table">
+        <button id="toggleRawBtn" class="btn small" style="margin-top:14px">Show Complete Reverse Geocoding</button>
+        <div class="powered">Powered by Google Geocoding API</div>
+        <div id="rawPanel" class="raw-panel" aria-hidden="true"><pre id="rawPre">-</pre></div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+/* CONFIG */
+const LOGIN_API = "https://script.google.com/macros/s/AKfycbwUm3YIFTkAh07r2vgOucR4FRdkpfpygIz1dQ9Eind_6nFKINDU2bYxkcmQr6v0Pf5y/exec";
+const GOOGLE_KEY = "AIzaSyDH-W5pEse0zftNBnyI7IRz7cytnsNgIFE";
+
+/* DOM */
+const loginCard = document.getElementById('loginCard');
+const loginBtn = document.getElementById('loginBtn');
+const loginMsg = document.getElementById('loginMsg');
+const usernameEl = document.getElementById('username');
+const passwordEl = document.getElementById('password');
+
+const mainCard = document.getElementById('mainCard');
+const logoutBtn = document.getElementById('logoutBtn');
+
+const latEl = document.getElementById('lat');
+const lngEl = document.getElementById('lng');
+const convertBtn = document.getElementById('convertBtn');
+const clearBtn = document.getElementById('clearBtn');
+
+const resultsContainer = document.getElementById('resultsContainer');
+const toggleRawBtn = document.getElementById('toggleRawBtn');
+const rawPanel = document.getElementById('rawPanel');
+const rawPre = document.getElementById('rawPre');
+
+const currentDateEl = document.getElementById('currentDate');
+const currentTimeEl = document.getElementById('currentTime');
+
+let sessionTimer = null;
+
+/* Helpers */
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function friendlyLabel(type){
+  if(!type) return type;
+  const map = {
+    street_number:'Street Number', route:'Street', neighborhood:'Neighborhood', sublocality:'Sublocality',
+    locality:'Locality', administrative_area_level_1:'Admin Level 1', administrative_area_level_2:'Admin Level 2',
+    administrative_area_level_3:'Admin Level 3', country:'Country', postal_code:'Postal Code'
+  };
+  return map[type] || type;
+}
+
+/* Date & Time (animated) */
+function updateDateTime(){
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-GB',{ weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  const timeStr = now.toLocaleTimeString('en-US',{ hour:'2-digit', minute:'2-digit' });
+  currentDateEl.textContent = dateStr;
+  currentTimeEl.textContent = timeStr;
+}
+setInterval(updateDateTime,1000);
+updateDateTime();
+
+/* Session management */
+function startSessionTimer(){
+  stopSessionTimer();
+  // 15 minutes
+  sessionTimer = setTimeout(()=> {
+    alert('Session expired. Please login again.');
+    doLogout();
+  }, 15 * 60 * 1000);
+}
+function stopSessionTimer(){ if(sessionTimer) { clearTimeout(sessionTimer); sessionTimer = null; } }
+function resetSessionTimer(){ if(sessionTimer) startSessionTimer(); }
+
+/* Login flow */
+async function doLogin(){
+  loginMsg.textContent = '';
+  const u = usernameEl.value.trim();
+  const p = passwordEl.value.trim();
+  if(!u || !p){ loginMsg.textContent = 'Please enter username and password.'; return; }
+
+  try{
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Checking...';
+    const res = await fetch(LOGIN_API, { method:'POST', body: JSON.stringify({ username:u, password:p }) });
+    const data = await res.json();
+    if(data.status === 'OK'){
+      loginCard.style.display = 'none';
+      mainCard.style.display = 'block';
+      logoutBtn.style.display = 'block';
+      startSessionTimer();
+    } else {
+      loginMsg.textContent = 'Invalid username or password.';
+    }
+  }catch(e){
+    loginMsg.textContent = 'Network error.';
+  }finally{
+    loginBtn.disabled = false;
+    loginBtn.textContent = 'Login';
+  }
+}
+
+/* Logout */
+function doLogout(){
+  stopSessionTimer();
+  mainCard.style.display = 'none';
+  loginCard.style.display = 'block';
+  logoutBtn.style.display = 'none';
+  usernameEl.value = '';
+  passwordEl.value = '';
+  // reset UI
+  resultsContainer.innerHTML = `<div class="result-row"><div class="cell-left">Status</div><div class="cell-right"><div class="muted">No results yet. Click Convert.</div></div></div>`;
+  rawPre.textContent = '-';
+  rawPanel.style.display = 'none';
+  toggleRawBtn.textContent = 'Show Complete Reverse Geocoding';
+}
+
+/* Reverse geocode */
+function buildGoogleUrl(lat,lng){
+  return `https://maps.googleapis.com/maps/api/geocode/json?latlng=${encodeURIComponent(lat+','+lng)}&key=${GOOGLE_KEY}`;
+}
+function makeRowHTML(label, htmlValue){
+  return `<div class="result-row"><div class="cell-left">${esc(label)}</div><div class="cell-right">${htmlValue}</div></div>`;
+}
+
+async function doConvert(){
+  resetSessionTimer();
+  const la = latEl.value.trim();
+  const ln = lngEl.value.trim();
+  if(!la || !ln){ alert('Please enter latitude and longitude.'); return; }
+  if(isNaN(Number(la)) || isNaN(Number(ln))){ alert('Latitude and Longitude must be numeric.'); return; }
+
+  resultsContainer.innerHTML = makeRowHTML('Status','<div class="muted">Requesting...</div>');
+  rawPre.textContent = '-';
+  rawPanel.style.display = 'none';
+  toggleRawBtn.textContent = 'Show Complete Reverse Geocoding';
+
+  try{
+    const ctrl = new AbortController();
+    const timeout = setTimeout(()=> ctrl.abort(), 15000);
+    const resp = await fetch(buildGoogleUrl(la,ln), { signal: ctrl.signal, headers:{ 'Accept':'application/json' } });
+    clearTimeout(timeout);
+    if(!resp.ok) throw new Error('Network error: ' + resp.status);
+    const data = await resp.json();
+    rawPre.textContent = JSON.stringify(data, null, 2);
+
+    if(data.status !== 'OK' && data.status !== 'ZERO_RESULTS'){
+      resultsContainer.innerHTML = makeRowHTML('API Status', esc(data.status) + (data.error_message ? (' — ' + esc(data.error_message)) : ''));
+      return;
+    }
+    if(data.status === 'ZERO_RESULTS' || !data.results || data.results.length === 0){
+      resultsContainer.innerHTML = makeRowHTML('Status','No address results found for this location.');
+      return;
+    }
+
+    const r = data.results[0];
+    const rows = [];
+    // formatted address shown first
+    rows.push( makeRowHTML('Formatted Address', esc(r.formatted_address || '-')) );
+    if(r.place_id) rows.push( makeRowHTML('Place ID', esc(r.place_id)) );
+
+    // address_components: show ALL components as individual rows
+    if(Array.isArray(r.address_components) && r.address_components.length){
+      // Add a header row for components (optional)
+      rows.push( makeRowHTML('--- Address components ---', '<div class="muted">Detailed components returned by Google</div>') );
+      r.address_components.forEach(ac => {
+        const type = Array.isArray(ac.types) && ac.types.length ? ac.types[0] : '';
+        const label = friendlyLabel(type);
+        const valueHtml = esc(ac.long_name) + (ac.short_name && ac.short_name !== ac.long_name ? ` <span class="muted">(${esc(ac.short_name)})</span>` : '');
+        rows.push( makeRowHTML(label || type || ac.long_name, valueHtml) );
+      });
+    }
+
+    // plus_code
+    if(data.plus_code){
+      const pc = data.plus_code;
+      rows.push( makeRowHTML('Plus Code', esc((pc.compound_code||'') + (pc.global_code ? ' — ' + pc.global_code : ''))) );
+    }
+
+    // geometry
+    if(r.geometry){
+      rows.push( makeRowHTML('Geometry', esc(`lat=${r.geometry.location.lat}, lng=${r.geometry.location.lng}`)) );
+      if(r.geometry.location_type) rows.push( makeRowHTML('Location type', esc(r.geometry.location_type)) );
+    }
+
+    // display all rows (auto height)
+    resultsContainer.innerHTML = rows.join('');
+  }catch(err){
+    if(err.name === 'AbortError'){
+      resultsContainer.innerHTML = makeRowHTML('Status','Request timed out. Try again.');
+      rawPre.textContent = '-';
+      return;
+    }
+    resultsContainer.innerHTML = makeRowHTML('Error', esc(err.message || String(err)));
+    rawPre.textContent = '-';
+  }
+}
+
+/* Toggle raw JSON panel */
+function toggleRaw(){
+  resetSessionTimer();
+  if(rawPanel.style.display === 'block'){
+    rawPanel.style.display = 'none';
+    rawPanel.setAttribute('aria-hidden','true');
+    toggleRawBtn.textContent = 'Show Complete Reverse Geocoding';
+  } else {
+    rawPanel.style.display = 'block';
+    rawPanel.setAttribute('aria-hidden','false');
+    toggleRawBtn.textContent = 'Hide Complete Reverse Geocoding';
+  }
+}
+
+/* Clear fields */
+function doClear(){
+  resetSessionTimer();
+  latEl.value = '';
+  lngEl.value = '';
+  resultsContainer.innerHTML = makeRowHTML('Status','<div class="muted">Cleared. Enter new coordinates and press Convert.</div>');
+  rawPre.textContent = '-';
+  rawPanel.style.display = 'none';
+  toggleRawBtn.textContent = 'Show Complete Reverse Geocoding';
+}
+
+/* Event bindings */
+loginBtn.addEventListener('click', doLogin);
+logoutBtn.addEventListener('click', doLogout);
+convertBtn.addEventListener('click', doConvert);
+clearBtn.addEventListener('click', doClear);
+toggleRawBtn.addEventListener('click', toggleRaw);
+
+/* Enter key support */
+[usernameEl, passwordEl, latEl, lngEl].forEach(el => {
+  el.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+
+      const loginVisible = window.getComputedStyle(loginCard).display !== "none";
+
+      if (loginVisible) {
+        doLogin();
+      } else {
+        doConvert();
+      }
+
+    }
+  });
+});
+
+
+/* show initial state */
+(function init(){
+  // login visible; main hidden
+  loginCard.style.display = 'block';
+  mainCard.style.display = 'none';
+  logoutBtn.style.display = 'none';
+  // initial results placeholder
+  resultsContainer.innerHTML = makeRowHTML('Status','<div class="muted">No results yet. Click Convert.</div>');
+})();
+
+</script>
+</body>
+</html>
