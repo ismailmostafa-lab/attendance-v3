@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Enterprise Large and Mega Projects — Attendance Log</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --we-purple:#6f2f90;
+  --we-turq:#00a3e0;
+  --bg:#f4f1fb;
+  --card:#ffffff;
+  --muted:#6b6b6b;
+  --in-color:#A666B0;
+  --out-color:#573B92;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);font-family:'Cairo',sans-serif;color:#222}
+.header{
+  width:100%;padding:20px 16px 12px 16px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+}
+.title-main{font-size:18px;font-weight:700;color:var(--we-purple);line-height:1}
+.title-sub{font-size:14px;color:var(--muted);margin-top:2px}
+.center{
+  display:flex;align-items:center;justify-content:center;height:calc(100vh - 84px);
+  padding:0 16px;
+}
+.card{
+  width:100%;max-width:420px;background:var(--card);border-radius:14px;padding:22px;box-shadow:0 6px 18px rgba(16,16,24,0.06);
+  text-align:center;
+}
+.small{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+  <header class="header" role="banner" aria-hidden="false">
+    <div class="title-main">Enterprise Large and Mega Projects</div>
+    <div class="title-sub">Attendance Log</div>
+  </header>
+
+  <main class="center" role="main">
+    <div class="card" aria-live="polite">
+      <div class="small">Redirecting…</div>
+    </div>
+  </main>
+
+<script>
+(function(){
+  // fast redirect logic
+  try{
+    if(localStorage.getItem('ID')) {
+      location.href = 'attendance.html';
+    } else {
+      location.href = 'login.html';
+    }
+  }catch(e){
+    location.href = 'login.html';
+  }
+})();
+</script>
+</body>
+</html>
