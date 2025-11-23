@@ -4,37 +4,182 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Enterprise Large and Mega Projects — Attendance Log</title>
-<link href="https://fonts.leapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
 :root{
-  --we-purple:#6f2f90; --muted:#6b6b6b; --bg:#f4f1fb; --card:#fff;
-  --in-color:#A666B0; --out-color:#573B92;
+  --we-purple:#6f2f90;
+  --muted:#6b6b6b;
+  --bg:#f4f1fb;
+  --card:#fff;
+
+  --in-color:#A666B0;
+  --out-color:#573B92;
 }
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;background:var(--bg);font-family:'Cairo',sans-serif;color:#111}
-.header{padding:20px 16px 12px 16px;position:sticky;top:0;background:var(--bg);z-index:10;text-align:center;}
-.title-main{font-size:20px;font-weight:700;color:var(--we-purple);line-height:1}
-.title-sub{font-size:14px;color:var(--muted);margin-top:11px}
-.container{padding:16px;display:flex;justify-content:center}
-.card{width:100%;max-width:520px;background:var(--card);border-radius:14px;padding:18px;box-shadow:0 8px 20px rgba(16,16,24,0.06)}
-.row{display:flex;gap:10px;flex-direction:column}
-.select{width:100%;padding:12px;border-radius:10px;border:1px solid #e6e6e9;font-size:15px}
-.controls{display:flex;gap:10px;margin-top:14px}
-.btn-full{flex:1;padding:14px;border-radius:12px;border:0;color:#fff;font-size:16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
-.logout{background:transparent;border:1px solid #ddd;padding:8px 10px;border-radius:10px;font-size:13px;color:#666;cursor:pointer}
-.msg{height:22px;margin-top:12px;text-align:center;font-weight:700}
-.small-muted{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
+
+/* ================= BASE ================= */
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{
+  margin:0;
+  background:var(--bg);
+  font-family:'Cairo',sans-serif;
+}
+
+/* ================= HEADER ================= */
+.header-box{
+  width:100%;
+  max-width:520px;
+  margin:26px auto 0 auto;
+  background:linear-gradient(135deg, #A666B0, #573B92);
+  padding:26px 16px 30px 16px;
+  border-radius:20px;
+  text-align:center;
+  color:#fff;
+  box-shadow:0 6px 20px rgba(111,47,144,0.22);
+}
+
+.header-title{
+  font-size:22px;
+  font-weight:700;
+}
+
+.header-sub{
+  margin-top:6px;
+  font-size:15px;
+  opacity:0.92;
+}
+
+/* ================= CARD ================= */
+.container{
+  padding:16px;
+  display:flex;
+  justify-content:center;
+}
+
+.card{
+  width:100%;
+  max-width:520px;
+  background:var(--card);
+  border-radius:20px;
+  padding:18px;
+  box-shadow:0 8px 20px rgba(16,16,24,0.06);
+  margin-top:20px;
+}
+
+.row{
+  display:flex;
+  gap:10px;
+  flex-direction:column;
+}
+
+/* ================= SELECT — FIXED ARROW + GLASS ================= */
+.select{
+  width:100%;
+  padding:14px 16px;
+  padding-right:40px;
+  border-radius:16px;
+  font-size:16px;
+  border:1px solid rgba(0,0,0,0.15);
+
+  /* Glass */
+  backdrop-filter:blur(10px);
+  background:rgba(255,255,255,0.75);
+
+  /* Shadow */
+  box-shadow:0 4px 14px rgba(0,0,0,0.08);
+
+  color:#333;
+
+  /* Remove default browser arrows */
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+}
+
+.select::-ms-expand{
+  display:none;
+}
+
+/* Custom arrow SVG */
+.select{
+  background-image:url('data:image/svg+xml;utf8,<svg fill="%23333" width="20" height="20" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-position:right 16px center;
+  background-repeat:no-repeat;
+  background-size:20px;
+}
+
+/* ================= BUTTONS ================= */
+.controls{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+}
+
+/* IN button (Gradient B) */
+.btn-in{
+  flex:1;
+  padding:14px;
+  border-radius:12px;
+  border:0;
+  font-size:16px;
+  color:#fff;
+  cursor:pointer;
+  background:linear-gradient(135deg, var(--in-color), #C28AD0);
+  box-shadow:0 4px 12px rgba(166,102,176,0.32);
+}
+
+/* OUT button (Gradient D) */
+.btn-out{
+  flex:1;
+  padding:14px;
+  border-radius:12px;
+  border:0;
+  font-size:16px;
+  color:#fff;
+  cursor:pointer;
+  background:linear-gradient(135deg, #7457B0, var(--out-color));
+  box-shadow:0 4px 12px rgba(87,59,146,0.32);
+}
+
+/* Logout button */
+.logout{
+  background:transparent;
+  border:1px solid #ddd;
+  padding:8px 10px;
+  border-radius:10px;
+  font-size:13px;
+  color:#666;
+  cursor:pointer;
+}
+
+.msg{
+  height:22px;
+  margin-top:12px;
+  text-align:center;
+  font-weight:700;
+}
+
+.small-muted{
+  font-size:13px;
+  color:var(--muted);
+  text-align:center;
+  margin-top:8px;
+}
 </style>
 </head>
+
 <body>
 
-<header class="header">
-  <div class="title-main">Enterprise Large and Mega Projects</div>
-  <div class="title-sub">Attendance Log</div>
-</header>
+<!-- HEADER BOX -->
+<div class="header-box">
+  <div class="header-title">Enterprise Large and Mega Projects</div>
+  <div class="header-sub">Attendance Log</div>
+</div>
 
+<!-- CARD -->
 <main class="container">
   <section class="card">
+
     <div style="display:flex;justify-content:space-between;align-items:center">
       <div style="font-weight:600"></div>
       <button class="logout" onclick="logout()">Logout</button>
@@ -42,6 +187,7 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:'Cairo',sans-ser
 
     <div class="row" style="margin-top:8px">
       <label class="small-muted" for="location">Location</label>
+
       <select id="location" class="select">
         <option value="" disabled selected>Select Location</option>
         <option value="Dokki">Dokki</option>
@@ -54,13 +200,14 @@ html,body{height:100%;margin:0;background:var(--bg);font-family:'Cairo',sans-ser
       </select>
 
       <div class="controls">
-        <button class="btn-full" style="background:var(--in-color)" onclick="send('IN')">IN</button>
-        <button class="btn-full" style="background:var(--out-color)" onclick="send('OUT')">OUT</button>
+        <button class="btn-in" onclick="send('IN')">IN</button>
+        <button class="btn-out" onclick="send('OUT')">OUT</button>
       </div>
 
       <div id="msg" class="msg"></div>
       <div class="small-muted" id="who"></div>
     </div>
+
   </section>
 </main>
 
@@ -100,7 +247,7 @@ function logout(){
   location.href="login.html";
 }
 
-/* SEND ATTENDANCE */
+/* SEND ATTENDANCE — LOGIC 100% UNCHANGED */
 async function send(type){
   const loc = document.getElementById("location").value;
   const msg = document.getElementById("msg");
@@ -127,7 +274,7 @@ async function send(type){
       lon: pos.coords.longitude,
       acc: pos.coords.accuracy,
       device: getDevice(),
-      browser: getBrowser(),
+      browser:getBrowser(),
       location: loc,
       ip: ip
     };
@@ -140,9 +287,6 @@ async function send(type){
 
       const j = await res.json();
 
-      /* ------------------------------------------
-         🔥 NEW — FAIL HANDLING (Fake GPS / Wrong Area)
-      ------------------------------------------- */
       if (j.status === "fail" || j.message === "outside_location_range") {
         msg.style.color = "red";
         msg.textContent = "Fake Location Attempt Blocked!";
@@ -156,16 +300,10 @@ async function send(type){
         return;
       }
 
-      /* ------------------------------------------
-         SUCCESS
-      ------------------------------------------- */
       if (j.status === "saved") {
         msg.style.color = "green";
         msg.textContent = "Attendance added successfully ✔";
-
-        setTimeout(() => {
-          logout();
-        }, 2000);
+        setTimeout(() => { logout(); }, 2000);
       }
 
     } catch (e){
@@ -179,56 +317,18 @@ async function send(type){
   }, { enableHighAccuracy:true, maximumAge:0, timeout:8000 });
 }
 
-
-/* OPTIONAL AUTO LOGOUT (10 minutes idle) */
+/* AUTO LOGOUT */
 let inactivityTimer;
 function resetInactivityTimer() {
   clearTimeout(inactivityTimer);
-  inactivityTimer = setTimeout(()=>{
-    logout();
-  }, 10*60*1000);
+  inactivityTimer = setTimeout(()=>{ logout(); }, 10*60*1000);
 }
 document.addEventListener("click", resetInactivityTimer);
 document.addEventListener("touchstart", resetInactivityTimer);
 document.addEventListener("mousemove", resetInactivityTimer);
 document.addEventListener("keydown", resetInactivityTimer);
 resetInactivityTimer();
-
 </script>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
