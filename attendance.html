@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Enterprise Large and Mega Projects — Attendance Log</title>
+<link href="https://fonts.leapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --we-purple:#6f2f90; --muted:#6b6b6b; --bg:#f4f1fb; --card:#fff;
+  --in-color:#A666B0; --out-color:#573B92;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);font-family:'Cairo',sans-serif;color:#111}
+.header{padding:20px 16px 12px 16px;position:sticky;top:0;background:var(--bg);z-index:10;text-align:center;}
+.title-main{font-size:20px;font-weight:700;color:var(--we-purple);line-height:1}
+.title-sub{font-size:14px;color:var(--muted);margin-top:11px}
+.container{padding:16px;display:flex;justify-content:center}
+.card{width:100%;max-width:520px;background:var(--card);border-radius:14px;padding:18px;box-shadow:0 8px 20px rgba(16,16,24,0.06)}
+.row{display:flex;gap:10px;flex-direction:column}
+.select{width:100%;padding:12px;border-radius:10px;border:1px solid #e6e6e9;font-size:15px}
+.controls{display:flex;gap:10px;margin-top:14px}
+.btn-full{flex:1;padding:14px;border-radius:12px;border:0;color:#fff;font-size:16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.logout{background:transparent;border:1px solid #ddd;padding:8px 10px;border-radius:10px;font-size:13px;color:#666;cursor:pointer}
+.msg{height:22px;margin-top:12px;text-align:center;font-weight:700}
+.small-muted{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="title-main">Enterprise Large and Mega Projects</div>
+  <div class="title-sub">Attendance Log</div>
+</header>
+
+<main class="container">
+  <section class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-weight:600"></div>
+      <button class="logout" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="row" style="margin-top:8px">
+      <label class="small-muted" for="location">Location</label>
+      <select id="location" class="select">
+        <option value="" disabled selected>Select Location</option>
+        <option value="Dokki">Dokki</option>
+        <option value="WFH">WFH</option>
+        <option value="Meeting">Meeting</option>
+        <option value="Smart">Smart</option>
+        <option value="Ganoub Mostasmreen">Ganoub Mostasmreen</option>
+        <option value="Kattamya">Kattamya</option>
+        <option value="Helwan">Helwan</option>
+      </select>
+
+      <div class="controls">
+        <button class="btn-full" style="background:var(--in-color)" onclick="send('IN')">IN</button>
+        <button class="btn-full" style="background:var(--out-color)" onclick="send('OUT')">OUT</button>
+      </div>
+
+      <div id="msg" class="msg"></div>
+      <div class="small-muted" id="who"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+/* constants */
+const API = "https://script.google.com/macros/s/AKfycbyIsl9kZcPMP90yomhpV2RxmpATp4_QEYUMxzclmo-GwB9xCMeFmjRxGCV11lwQAdsz/exec";
+const ID = localStorage.getItem("ID");
+const NAME = localStorage.getItem("name") || ID;
+
+if (!ID) location.href = "login.html";
+document.getElementById("who").textContent = NAME;
+
+/* utilities */
+function getDevice(){
+  const ua = navigator.userAgent;
+  if(/android/i.test(ua)) return "Android";
+  if(/iphone|ipad|ipod/i.test(ua)) return "iOS";
+  if(/windows/i.test(ua)) return "Windows";
+  if(/mac/i.test(ua)) return "MacOS";
+  return "Unknown";
+}
+function getBrowser(){
+  const ua = navigator.userAgent;
+  if(ua.includes("Chrome")) return "Chrome";
+  if(ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
+  if(ua.includes("Firefox")) return "Firefox";
+  if(ua.includes("Edg")) return "Edge";
+  return "Unknown";
+}
+async function getIP(){
+  try { let r=await fetch("https://api.ipify.org?format=json"); let j=await r.json(); return j.ip||""; }
+  catch(e){ return ""; }
+}
+function logout(){
+  localStorage.removeItem("ID");
+  localStorage.removeItem("name");
+  location.href="login.html";
+}
+
+/* SEND ATTENDANCE */
+async function send(type){
+  const loc = document.getElementById("location").value;
+  const msg = document.getElementById("msg");
+
+  if(!loc){
+    msg.style.color="red";
+    msg.textContent="Please select a location!";
+    return;
+  }
+
+  msg.style.color="#666";
+  msg.textContent="Sending...";
+
+  const ip = await getIP();
+
+  navigator.geolocation.getCurrentPosition(async pos => {
+    
+    const payload = {
+      action: "attendance",
+      ID: ID,
+      name: NAME,
+      type: type,
+      lat: pos.coords.latitude,
+      lon: pos.coords.longitude,
+      acc: pos.coords.accuracy,
+      device: getDevice(),
+      browser: getBrowser(),
+      location: loc,
+      ip: ip
+    };
+
+    try {
+      const res = await fetch(API, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      });
+
+      const j = await res.json();
+
+      /* ------------------------------------------
+         🔥 NEW — FAIL HANDLING (Fake GPS / Wrong Area)
+      ------------------------------------------- */
+      if (j.status === "fail" || j.message === "outside_location_range") {
+        msg.style.color = "red";
+        msg.textContent = "Fake Location Attempt Blocked!";
+        setTimeout(() => logout(), 1500);
+        return;
+      }
+
+      if (j.message === "no_gps") {
+        msg.style.color = "red";
+        msg.textContent = "GPS not available — enable location!";
+        return;
+      }
+
+      /* ------------------------------------------
+         SUCCESS
+      ------------------------------------------- */
+      if (j.status === "saved") {
+        msg.style.color = "green";
+        msg.textContent = "Attendance added successfully ✔";
+
+        setTimeout(() => {
+          logout();
+        }, 2000);
+      }
+
+    } catch (e){
+      msg.style.color = "red";
+      msg.textContent = "Connection Error";
+    }
+
+  }, err=>{
+    msg.style.color="red";
+    msg.textContent="GPS access denied";
+  }, { enableHighAccuracy:true, maximumAge:0, timeout:8000 });
+}
+
+
+/* OPTIONAL AUTO LOGOUT (10 minutes idle) */
+let inactivityTimer;
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(()=>{
+    logout();
+  }, 10*60*1000);
+}
+document.addEventListener("click", resetInactivityTimer);
+document.addEventListener("touchstart", resetInactivityTimer);
+document.addEventListener("mousemove", resetInactivityTimer);
+document.addEventListener("keydown", resetInactivityTimer);
+resetInactivityTimer();
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
