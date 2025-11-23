@@ -13,26 +13,21 @@
   --muted:#6b6b6b;
   --bg:#f4f1fb;
   --card:#fff;
-  --accent:#00a3e0;
 
-  --btn-start:#A666B0; 
+  --btn-start:#A666B0;
   --btn-end:#573B92;
 }
 
-*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+/* Base */
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{
   margin:0;
   background:var(--bg);
   font-family:'Cairo',sans-serif;
-  animation:fadeIn 0.4s ease;
+  color:#111;
 }
 
-@keyframes fadeIn{
-  from{opacity:0; transform:translateY(10px);}
-  to{opacity:1; transform:none;}
-}
-
-/* ================= HEADER BOX ================= */
+/* ================= HEADER BOX (same as login) ================= */
 .header-box{
   width:100%;
   max-width:420px;
@@ -48,7 +43,6 @@ html,body{
 .header-title{
   font-size:22px;
   font-weight:700;
-  letter-spacing:0.2px;
 }
 
 .header-sub{
@@ -57,12 +51,11 @@ html,body{
   opacity:0.92;
 }
 
-/* ================= LAYOUT ================= */
-.wrap{
+/* ================= CARD (same as login) ================= */
+.container{
+  padding:22px;
   display:flex;
   justify-content:center;
-  padding:22px;
-  margin-top:20px;
 }
 
 .card{
@@ -72,150 +65,247 @@ html,body{
   border-radius:20px;
   padding:26px;
   box-shadow:0 8px 28px rgba(0,0,0,0.08);
+  margin-top:20px;
 }
 
-/* ================= INPUTS ================= */
-.label{
-  font-size:14px;
-  color:var(--muted);
-  margin-top:14px;
+/* ================= LABEL ================= */
+.label-title{
+  font-size:16px;
+  font-weight:700;
+  text-align:center;
+  margin-bottom:10px;
+  margin-top:12px;
+  color:#555;
 }
 
-.input{
+/* ================= SELECT ================= */
+.select{
   width:100%;
   padding:14px 16px;
   border-radius:12px;
   border:1px solid #e0e0e0;
   font-size:16px;
-  margin-top:6px;
-  transition:0.25s;
 }
 
-.input:focus{
-  outline:none;
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(0,163,224,0.35);
+/* ================= BUTTONS (same 3D style as login) ================= */
+.controls{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
 }
 
-/* ================= MODERN TRUE 3D GRADIENT BUTTON ================= */
-.btn{
-  width:100%;
-  margin-top:22px;
+.btn-full{
+  flex:1;
   padding:16px;
   font-size:17px;
-  color:#fff;
   border:none;
   border-radius:14px;
+  color:#fff;
+  cursor:pointer;
 
   background:linear-gradient(135deg, var(--btn-start), var(--btn-end));
 
-  /* TRUE 3D EFFECT FOR MOBILE */
   box-shadow:
-    0 6px 14px rgba(111,47,144,0.30),   /* العمق الأساسي */
-    0 3px 6px rgba(0,0,0,0.18),         /* edge shadow */
-    inset 0 2px 4px rgba(255,255,255,0.22); /* inner highlight برّاق */
+    0 6px 14px rgba(111,47,144,0.30),
+    0 3px 6px rgba(0,0,0,0.18),
+    inset 0 2px 4px rgba(255,255,255,0.22);
 
-  cursor:pointer;
-  transition:0.18s ease;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-.btn:active{
+.btn-full:active{
   transform:scale(0.96);
-  box-shadow:
-    0 3px 8px rgba(111,47,144,0.25),
-    0 2px 4px rgba(0,0,0,0.15),
-    inset 0 1px 3px rgba(255,255,255,0.20);
 }
 
-/* ================= TEXT ================= */
+/* Logout */
+.logout{
+  background:transparent;
+  border:1px solid #ddd;
+  padding:8px 12px;
+  border-radius:10px;
+  font-size:13px;
+  color:#666;
+  cursor:pointer;
+}
+
+/* Messages */
 .msg{
   height:22px;
-  text-align:center;
-  font-weight:600;
-  font-size:14px;
-  margin-top:12px;
-}
-
-.footer-note{
-  font-size:12px;
-  color:#9a9a9a;
   margin-top:14px;
   text-align:center;
+  font-weight:700;
+  font-size:14px;
+}
+
+.small-muted{
+  font-size:13px;
+  color:var(--muted);
+  text-align:center;
+  margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER BOX -->
+<!-- HEADER -->
 <div class="header-box">
   <div class="header-title">Enterprise Large and Mega Projects</div>
   <div class="header-sub">Attendance Log</div>
 </div>
 
-<!-- CARD -->
-<main class="wrap">
+<!-- CONTENT -->
+<main class="container">
   <section class="card">
 
-    <label class="label" for="userid">ID</label>
-    <input id="userid" class="input" type="text" autocomplete="username" inputmode="numeric">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div></div>
+      <button class="logout" onclick="logout()">Logout</button>
+    </div>
 
-    <label class="label" for="password">Password</label>
-    <input id="password" class="input" type="password" autocomplete="current-password">
+    <label class="label-title" for="location">Location</label>
 
-    <button class="btn" onclick="login()">Login</button>
+    <select id="location" class="select">
+      <option value="" disabled selected>Select Location</option>
+      <option value="Dokki">Dokki</option>
+      <option value="WFH">WFH</option>
+      <option value="Meeting">Meeting</option>
+      <option value="Smart">Smart</option>
+      <option value="Ganoub Mostasmreen">Ganoub Mostasmreen</option>
+      <option value="Kattamya">Kattamya</option>
+      <option value="Helwan">Helwan</option>
+    </select>
+
+    <div class="controls">
+      <button class="btn-full" style="background:linear-gradient(135deg, #A666B0,#C28AD0)" onclick="send('IN')">IN</button>
+      <button class="btn-full" style="background:linear-gradient(135deg, #7457B0,#573B92)" onclick="send('OUT')">OUT</button>
+    </div>
 
     <div id="msg" class="msg"></div>
-
-    <div class="footer-note">
-      Enterprise Project Management | Large & Mega Projects Unit
-    </div>
+    <div class="small-muted" id="who"></div>
 
   </section>
 </main>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbxvKCDcuXm8b632N_sMN6Sy_wTCSBKXPY-ZK4FVG7AgCEyPz50K0m1btEgNkEq80qb2/exec";
+/* constants */
+const API = "https://script.google.com/macros/s/AKfycbyIsl9kZcPMP90yomhpV2RxmpATp4_QEYUMxzclmo-GwB9xCMeFmjRxGCV11lwQAdsz/exec";
+const ID = localStorage.getItem("ID");
+const NAME = localStorage.getItem("name") || ID;
 
-if(localStorage.getItem('ID')) location.href = 'attendance.html';
+if (!ID) location.href = "login.html";
+document.getElementById("who").textContent = NAME;
 
-async function login(){
-  const id = document.getElementById('userid').value.trim();
-  const pass = document.getElementById('password').value.trim();
-  const msg = document.getElementById('msg');
+/* utilities */
+function getDevice(){
+  const ua = navigator.userAgent;
+  if(/android/i.test(ua)) return "Android";
+  if(/iphone|ipad|ipod/i.test(ua)) return "iOS";
+  if(/windows/i.test(ua)) return "Windows";
+  if(/mac/i.test(ua)) return "MacOS";
+  return "Unknown";
+}
+function getBrowser(){
+  const ua = navigator.userAgent;
+  if(ua.includes("Chrome")) return "Chrome";
+  if(ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
+  if(ua.includes("Firefox")) return "Firefox";
+  if(ua.includes("Edg")) return "Edge";
+  return "Unknown";
+}
+async function getIP(){
+  try { let r=await fetch("https://api.ipify.org?format=json"); let j=await r.json(); return j.ip||""; }
+  catch(e){ return ""; }
+}
+function logout(){
+  localStorage.removeItem("ID");
+  localStorage.removeItem("name");
+  location.href="login.html";
+}
 
-  if(!id || !pass){
-    msg.style.color='red';
-    msg.textContent='Please fill all fields';
+/* SEND ATTENDANCE — logic unchanged */
+async function send(type){
+  const loc = document.getElementById("location").value;
+  const msg = document.getElementById("msg");
+
+  if(!loc){
+    msg.style.color="red";
+    msg.textContent="Please select a location!";
     return;
   }
 
-  msg.style.color='#666';
-  msg.textContent='Checking...';
+  msg.style.color="#666";
+  msg.textContent="Sending...";
 
-  try{
-    const r = await fetch(API,{
-      method:'POST',
-      body:JSON.stringify({action:'login', ID:id, password:pass})
-    });
-    const j = await r.json();
+  const ip = await getIP();
 
-    if(j.status === 'success'){
-      localStorage.setItem('ID', j.ID);
-      localStorage.setItem('name', j.name);
-      msg.style.color='green';
-      msg.textContent='OK';
-      setTimeout(()=> location.href='attendance.html', 250);
-    } else {
-      msg.style.color='red';
-      msg.textContent='Invalid ID or Password';
+  navigator.geolocation.getCurrentPosition(async pos => {
+    
+    const payload = {
+      action: "attendance",
+      ID: ID,
+      name: NAME,
+      type: type,
+      lat: pos.coords.latitude,
+      lon: pos.coords.longitude,
+      acc: pos.coords.accuracy,
+      device: getDevice(),
+      browser: getBrowser(),
+      location: loc,
+      ip: ip
+    };
+
+    try {
+      const res = await fetch(API, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      });
+
+      const j = await res.json();
+
+      if (j.status === "fail" || j.message === "outside_location_range") {
+        msg.style.color = "red";
+        msg.textContent = "Fake Location Attempt Blocked!";
+        setTimeout(() => logout(), 1500);
+        return;
+      }
+
+      if (j.message === "no_gps") {
+        msg.style.color = "red";
+        msg.textContent = "GPS not available — enable location!";
+        return;
+      }
+
+      if (j.status === "saved") {
+        msg.style.color = "green";
+        msg.textContent = "Attendance added successfully ✔";
+        setTimeout(() => { logout(); }, 2000);
+      }
+
+    } catch (e){
+      msg.style.color = "red";
+      msg.textContent = "Connection Error";
     }
 
-  }catch(e){
-    msg.style.color='red';
-    msg.textContent='Connection Error';
-  }
+  }, err=>{
+    msg.style.color="red";
+    msg.textContent="GPS access denied";
+  }, { enableHighAccuracy:true, maximumAge:0, timeout:8000 });
 }
+
+/* AUTO LOGOUT */
+let inactivityTimer;
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(()=>{ logout(); }, 10*60*1000);
+}
+document.addEventListener("click", resetInactivityTimer);
+document.addEventListener("touchstart", resetInactivityTimer);
+document.addEventListener("mousemove", resetInactivityTimer);
+document.addEventListener("keydown", resetInactivityTimer);
+resetInactivityTimer();
 </script>
 
 </body>
