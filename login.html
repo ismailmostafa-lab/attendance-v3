@@ -97,7 +97,7 @@ html,body{
   box-shadow:0 0 0 3px rgba(0,163,224,0.35);
 }
 
-/* ================= MODERN GRADIENT BUTTON ================= */
+/* ================= MODERN TRUE 3D GRADIENT BUTTON ================= */
 .btn{
   width:100%;
   margin-top:22px;
@@ -106,14 +106,25 @@ html,body{
   color:#fff;
   border:none;
   border-radius:14px;
+
   background:linear-gradient(135deg, var(--btn-start), var(--btn-end));
-  box-shadow:0 6px 14px rgba(111,47,144,0.25);
+
+  /* TRUE 3D EFFECT FOR MOBILE */
+  box-shadow:
+    0 6px 14px rgba(111,47,144,0.30),   /* العمق الأساسي */
+    0 3px 6px rgba(0,0,0,0.18),         /* edge shadow */
+    inset 0 2px 4px rgba(255,255,255,0.22); /* inner highlight برّاق */
+
   cursor:pointer;
   transition:0.18s ease;
 }
 
 .btn:active{
   transform:scale(0.96);
+  box-shadow:
+    0 3px 8px rgba(111,47,144,0.25),
+    0 2px 4px rgba(0,0,0,0.15),
+    inset 0 1px 3px rgba(255,255,255,0.20);
 }
 
 /* ================= TEXT ================= */
