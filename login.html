@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Enterprise Large and Mega Projects — Attendance Log</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --we-purple:#6f2f90; --muted:#6b6b6b; --bg:#f4f1fb; --card:#fff;
+  --accent:#00a3e0; --in-color:#A666B0; --out-color:#573B92;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);font-family:'Cairo',sans-serif;color:#111;-webkit-font-smoothing:antialiased}
+.header{padding:20px 16px 12px 16px;text-align:center;}
+.title-main{font-size:20px;font-weight:700;color:var(--we-purple);line-height:1}
+.title-sub{font-size:14px;color:var(--muted);margin-top:11px}
+.wrap{display:flex;align-items:center;justify-content:center;padding:18px}
+.card{width:100%;max-width:420px;background:var(--card);border-radius:14px;padding:20px;box-shadow:0 8px 22px rgba(16,16,24,0.06)}
+.input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #e6e6e9;font-size:15px;margin-top:8px}
+.label{font-size:13px;color:var(--muted);margin-top:12px}
+.btn{width:100%;display:inline-block;padding:13px;border-radius:12px;border:0;font-size:16px;color:#fff;background:var(--in-color);margin-top:18px;cursor:pointer}
+.msg{height:22px;margin-top:10px;text-align:center;font-weight:600}
+.small-muted{font-size:12px;color:var(--muted);margin-top:8px;text-align:center}
+.footer-note{font-size:11px;color:#9a9a9a;margin-top:10px;text-align:center}
+</style>
+</head>
+<body>
+  <header class="header" role="banner" aria-hidden="false">
+    <div class="title-main"><b>Enterprise Large and Mega Projects</b></div>
+    <div class="title-sub">Attendance Log</div>
+  </header>
+
+  <main class="wrap" role="main">
+    <section class="card" aria-live="polite">
+      <label class="label" for="userid">ID</label>
+      <input id="userid" class="input" type="text" autocomplete="username" inputmode="numeric" />
+      <label class="label" for="password">Password</label>
+      <input id="password" class="input" type="password" autocomplete="current-password" />
+      <button id="btnLogin" class="btn" onclick="login()">Login</button>
+      <div id="msg" class="msg" aria-atomic="true"></div>
+      <div class="footer-note small-muted">Enterprise Project Management | Large & Mega Projects Unit </div>
+    </section>
+  </main>
+
+<script>
+/* Minimal optimized JS — preserves original logic and API */
+const API = "https://script.google.com/macros/s/AKfycbyIsl9kZcPMP90yomhpV2RxmpATp4_QEYUMxzclmo-GwB9xCMeFmjRxGCV11lwQAdsz/exec";
+if(localStorage.getItem('ID')) location.href = 'attendance.html';
+
+async function login(){
+  const id = document.getElementById('userid').value.trim();
+  const pass = document.getElementById('password').value.trim();
+  const msg = document.getElementById('msg');
+  if(!id || !pass){ msg.style.color='red'; msg.textContent='Please fill all fields'; return; }
+  msg.style.color='#666'; msg.textContent='Checking...';
+  const payload = { action:'login', ID: id, password: pass };
+  try{
+    const r = await fetch(API, { method:'POST', body: JSON.stringify(payload) });
+    const j = await r.json();
+    if(j.status === 'success'){
+      localStorage.setItem('ID', j.ID);
+      localStorage.setItem('name', j.name);
+      // small visual OK then redirect
+      msg.style.color='green'; msg.textContent='OK';
+      setTimeout(()=> location.href='attendance.html', 250);
+    } else {
+      msg.style.color='red'; msg.textContent='Invalid ID or Password';
+    }
+  }catch(err){
+    msg.style.color='red'; msg.textContent='Connection Error';
+  }
+}
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
