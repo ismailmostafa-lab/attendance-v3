@@ -48,7 +48,6 @@ html,body{
 .header-title{
   font-size:22px;
   font-weight:700;
-  letter-spacing:0.2px;
 }
 
 .header-sub{
@@ -97,7 +96,7 @@ html,body{
   box-shadow:0 0 0 3px rgba(0,163,224,0.35);
 }
 
-/* ================= MODERN TRUE 3D GRADIENT BUTTON ================= */
+/* ================= BUTTON ================= */
 .btn{
   width:100%;
   margin-top:22px;
@@ -106,25 +105,17 @@ html,body{
   color:#fff;
   border:none;
   border-radius:14px;
-
   background:linear-gradient(135deg, var(--btn-start), var(--btn-end));
-
-  /* TRUE 3D EFFECT FOR MOBILE */
   box-shadow:
-    0 6px 14px rgba(111,47,144,0.30),   /* العمق الأساسي */
-    0 3px 6px rgba(0,0,0,0.18),         /* edge shadow */
-    inset 0 2px 4px rgba(255,255,255,0.22); /* inner highlight برّاق */
-
+    0 6px 14px rgba(111,47,144,0.30),
+    0 3px 6px rgba(0,0,0,0.18),
+    inset 0 2px 4px rgba(255,255,255,0.22);
   cursor:pointer;
   transition:0.18s ease;
 }
 
 .btn:active{
   transform:scale(0.96);
-  box-shadow:
-    0 3px 8px rgba(111,47,144,0.25),
-    0 2px 4px rgba(0,0,0,0.15),
-    inset 0 1px 3px rgba(255,255,255,0.20);
 }
 
 /* ================= TEXT ================= */
@@ -136,10 +127,24 @@ html,body{
   margin-top:12px;
 }
 
+/* ===== IMAGE BETWEEN BUTTON & FOOTER ===== */
+.footer-image{
+  margin-top:12px;
+  margin-bottom:10px;
+  text-align:center;
+}
+
+.footer-image img{
+  width:100%;
+  max-width:220px;
+  height:auto;
+}
+
+/* ================= FOOTER ================= */
 .footer-note{
   font-size:12px;
   color:#9a9a9a;
-  margin-top:14px;
+  margin-top:8px;
   text-align:center;
 }
 </style>
@@ -147,13 +152,11 @@ html,body{
 
 <body>
 
-<!-- HEADER BOX -->
 <div class="header-box">
   <div class="header-title">Enterprise Large and Mega Projects</div>
   <div class="header-sub">Attendance Log</div>
 </div>
 
-<!-- CARD -->
 <main class="wrap">
   <section class="card">
 
@@ -166,6 +169,11 @@ html,body{
     <button class="btn" onclick="login()">Login</button>
 
     <div id="msg" class="msg"></div>
+
+    <!-- الصورة -->
+    <div class="footer-image">
+      <img src="logo.png" alt="Logo">
+    </div>
 
     <div class="footer-note">
       Enterprise Project Management | Large & Mega Projects Unit
