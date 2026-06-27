@@ -204,19 +204,36 @@ html, body {
   animation: shake 0.4s ease !important;
 }
 
-.msg {
-  min-height: 22px;
+.msg { display: none; }
+
+/* ===== PULSE MSG — warning (برتقالي) ===== */
+.pulse-msg-warn {
+  display: none;
   text-align: center;
-  font-weight: 600;
+  margin-top: 10px;
   font-size: 14px;
-  margin-top: 12px;
+  font-weight: 700;
+  color: #e65100;
+  -webkit-animation: pulseText 0.5s ease;
+  animation: pulseText 0.5s ease;
+}
+.pulse-icon-warn {
+  width: 44px; height: 44px;
+  background: #fff3e0;
+  border-radius: 50%;
+  display: -webkit-box; display: -webkit-flex; display: flex;
+  -webkit-box-align: center; -webkit-align-items: center; align-items: center;
+  -webkit-box-pack: center; -webkit-justify-content: center; justify-content: center;
+  margin: 0 auto 6px auto;
+  -webkit-animation: pulsering 0.6s ease 0.1s;
+  animation: pulsering 0.6s ease 0.1s;
 }
 
 .footer-image { margin-top: 12px; margin-bottom: 10px; text-align: center; }
 .footer-image img { width: 100%; max-width: 220px; height: auto; }
 .footer-note { font-size: 12px; color: #9a9a9a; margin-top: 8px; text-align: center; }
 
-/* ===== PULSE MSG (Fake Location) ===== */
+/* ===== PULSE MSG — error (أحمر) ===== */
 .pulse-msg {
   display: none;
   text-align: center;
@@ -295,16 +312,26 @@ html, body {
       </div>
     </button>
 
-    <div id="msg" class="msg"></div>
-    <div class="pulse-msg" id="fakeMsg">
+    <div id="msgWarn" class="pulse-msg-warn">
+      <div class="pulse-icon-warn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e65100" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      Please fill all fields
+    </div>
+    <div id="msgErr" class="pulse-msg">
       <div class="pulse-icon-wrap">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c62828" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
           <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
         </svg>
       </div>
-      Fake Location Attempt Blocked!
+      Invalid ID or Password
     </div>
+    <div id="msgSuccess" style="display:none;text-align:center;font-size:14px;font-weight:700;color:#2e7d32;margin-top:12px;"></div>
+    <div id="msg" style="display:none;"></div>
     <div class="footer-image"><img src="logooo.png" alt="Logo"></div>
     <div class="footer-note">Enterprise Project Management | Large &amp; Mega Projects Unit</div>
 
@@ -321,7 +348,21 @@ var spinner   = document.getElementById('spinner');
 var checkWrap = document.getElementById('checkWrap');
 var checkPath = document.getElementById('checkPath');
 var btnText   = document.getElementById('btnText');
-var msg       = document.getElementById('msg');
+var msgWarn   = document.getElementById('msgWarn');
+var msgErr    = document.getElementById('msgErr');
+var msgSuccess= document.getElementById('msgSuccess');
+
+function hideAllMsgs() {
+  msgWarn.style.display = 'none';
+  msgErr.style.display  = 'none';
+  msgSuccess.style.display = 'none';
+}
+
+function showPulse(el) {
+  el.style.display = 'none';
+  void el.offsetWidth;
+  el.style.display = 'block';
+}
 
 function setLoading() {
   loginBtn.disabled = true;
@@ -329,8 +370,7 @@ function setLoading() {
   checkWrap.style.display = 'none';
   btnText.textContent = 'Checking...';
   btnText.style.opacity = '0.75';
-  msg.textContent = '';
-  msg.style.color = '#666';
+  hideAllMsgs();
 }
 
 function setSuccess() {
@@ -340,11 +380,12 @@ function setSuccess() {
   setTimeout(function(){ checkPath.classList.add('drawn'); }, 60);
   btnText.textContent = 'Welcome!';
   btnText.style.opacity = '1';
-  msg.style.color = '#2e7d32';
-  msg.textContent = 'Redirecting...';
+  hideAllMsgs();
+  msgSuccess.textContent = 'Redirecting...';
+  msgSuccess.style.display = 'block';
 }
 
-function setError(text, isFake) {
+function setError(type) {
   spinner.style.display = 'none';
   checkWrap.style.display = 'none';
   loginBtn.classList.remove('success');
@@ -354,25 +395,16 @@ function setError(text, isFake) {
   loginBtn.classList.remove('shake');
   void loginBtn.offsetWidth;
   loginBtn.classList.add('shake');
-
-  var fakeMsg = document.getElementById('fakeMsg');
-  if(isFake){
-    msg.textContent = '';
-    fakeMsg.style.display = 'none';
-    void fakeMsg.offsetWidth;
-    fakeMsg.style.display = 'block';
-  } else {
-    fakeMsg.style.display = 'none';
-    msg.style.color = 'red';
-    msg.textContent = text;
-  }
+  hideAllMsgs();
+  if(type === 'warn')      showPulse(msgWarn);
+  else if(type === 'err')  showPulse(msgErr);
 }
 
 function login() {
   var id   = document.getElementById('userid').value.trim();
   var pass = document.getElementById('password').value.trim();
 
-  if(!id || !pass) { setError('Please fill all fields'); return; }
+  if(!id || !pass) { setError('warn'); return; }
 
   setLoading();
 
@@ -388,10 +420,10 @@ function login() {
       setSuccess();
       setTimeout(function(){ location.href = 'attendance.html'; }, 1300);
     } else {
-      setError('Invalid ID or Password');
+      setError('err');
     }
   })
-  .catch(function(){ setError('Connection Error'); });
+  .catch(function(){ setError('err'); });
 }
 </script>
 </body>
