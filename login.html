@@ -330,6 +330,15 @@ html, body {
       </div>
       Invalid ID or Password
     </div>
+    <div id="msgConn" class="pulse-msg">
+      <div class="pulse-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c62828" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="1" y1="1" x2="23" y2="23"/>
+          <path d="M16.72 11.06A10.94 10.94 0 0119 12.55M5 12.55a10.94 10.94 0 015.17-2.39M10.71 5.05A16 16 0 0122.56 9M1.42 9a15.91 15.91 0 014.7-2.88M12 20h.01"/>
+        </svg>
+      </div>
+      Connection Error
+    </div>
     <div id="msgSuccess" style="display:none;text-align:center;font-size:14px;font-weight:700;color:#2e7d32;margin-top:12px;"></div>
     <div id="msg" style="display:none;"></div>
     <div class="footer-image"><img src="logooo.png" alt="Logo"></div>
@@ -350,11 +359,13 @@ var checkPath = document.getElementById('checkPath');
 var btnText   = document.getElementById('btnText');
 var msgWarn   = document.getElementById('msgWarn');
 var msgErr    = document.getElementById('msgErr');
+var msgConn   = document.getElementById('msgConn');
 var msgSuccess= document.getElementById('msgSuccess');
 
 function hideAllMsgs() {
-  msgWarn.style.display = 'none';
-  msgErr.style.display  = 'none';
+  msgWarn.style.display   = 'none';
+  msgErr.style.display    = 'none';
+  msgConn.style.display   = 'none';
   msgSuccess.style.display = 'none';
 }
 
@@ -398,6 +409,7 @@ function setError(type) {
   hideAllMsgs();
   if(type === 'warn')      showPulse(msgWarn);
   else if(type === 'err')  showPulse(msgErr);
+  else if(type === 'conn') showPulse(msgConn);
 }
 
 function login() {
@@ -423,7 +435,7 @@ function login() {
       setError('err');
     }
   })
-  .catch(function(){ setError('err'); });
+  .catch(function(){ setError('conn'); });
 }
 </script>
 </body>
