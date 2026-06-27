@@ -7,59 +7,183 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --we-purple:#6f2f90;
-  --muted:#6b6b6b;
-  --bg:#f4f1fb;
-  --card:#fff;
-  --btn-start:#A666B0;
-  --btn-end:#573B92;
+  --muted: #6b6b6b;
+  --bg: #f4f1fb;
+  --card: #fff;
+  --btn-start: #A666B0;
+  --btn-end: #573B92;
 }
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{margin:0;background:var(--bg);font-family:'Cairo',sans-serif;color:#111;}
-.header-box{width:100%;max-width:420px;margin:26px auto 0 auto;background:linear-gradient(135deg,var(--btn-start),var(--btn-end));padding:26px 16px 30px 16px;border-radius:20px;text-align:center;color:#fff;box-shadow:0 6px 20px rgba(111,47,144,0.22);}
-.header-title{font-size:22px;font-weight:700;}
-.header-sub{margin-top:6px;font-size:15px;opacity:0.92;}
-.container{padding:22px;display:flex;justify-content:center;}
-.card{width:100%;max-width:420px;background:var(--card);border-radius:20px;padding:26px;box-shadow:0 8px 28px rgba(0,0,0,0.08);margin-top:20px;}
-.label-title{font-size:16px;font-weight:700;text-align:center;margin-bottom:10px;margin-top:12px;color:#555;}
-.select{width:100%;padding:14px 16px;border-radius:12px;border:1px solid #e0e0e0;font-size:16px;}
-.controls{display:flex;gap:10px;margin-top:20px;}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  font-family: 'Cairo', sans-serif;
+  color: #111;
+}
+
+.header-box {
+  width: 100%;
+  max-width: 420px;
+  margin: 26px auto 0 auto;
+  background: linear-gradient(135deg, var(--btn-start), var(--btn-end));
+  padding: 26px 16px 30px 16px;
+  border-radius: 20px;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(111,47,144,0.22);
+}
+.header-title { font-size: 22px; font-weight: 700; }
+.header-sub   { margin-top: 6px; font-size: 15px; opacity: 0.92; }
+
+.container { padding: 22px; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-pack: center; -webkit-justify-content: center; justify-content: center; }
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--card);
+  border-radius: 20px;
+  padding: 26px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+  margin-top: 20px;
+}
+
+.label-title {
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 10px;
+  margin-top: 12px;
+  color: #555;
+}
+
+.select {
+  display: block;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  font-size: 16px;
+  font-family: 'Cairo', sans-serif;
+  background: #fff;
+  color: #111;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.controls { display: -webkit-box; display: -webkit-flex; display: flex; gap: 10px; margin-top: 20px; }
 
 /* ===== BUTTONS ===== */
-.btn-full{
-  flex:1;padding:16px;font-size:17px;border:none;border-radius:14px;color:#fff;cursor:pointer;
-  box-shadow:0 6px 14px rgba(111,47,144,0.30),0 3px 6px rgba(0,0,0,0.18),inset 0 2px 4px rgba(255,255,255,0.22);
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  transition:0.18s ease;position:relative;overflow:hidden;
+.btn-full {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  flex: 1;
+  height: 56px;
+  padding: 0;
+  font-size: 17px;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+  border: none;
+  border-radius: 14px;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(111,47,144,0.30), 0 3px 6px rgba(0,0,0,0.18);
+  position: relative;
+  overflow: hidden;
+  -webkit-appearance: none;
 }
-.btn-full:active{transform:scale(0.96);}
-.btn-full:disabled{opacity:0.7;cursor:not-allowed;}
-.btn-full.success{background:linear-gradient(135deg,#2e7d32,#1b5e20) !important;box-shadow:0 6px 14px rgba(46,125,50,0.35) !important;}
+.btn-full:active { -webkit-transform: scale(0.96); transform: scale(0.96); }
+.btn-full:disabled { opacity: 0.7; cursor: not-allowed; }
+.btn-full.success { background: linear-gradient(135deg, #2e7d32, #1b5e20) !important; box-shadow: 0 6px 14px rgba(46,125,50,0.35) !important; }
+
+.btn-inner {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  width: 100%;
+}
 
 /* ===== SPINNER ===== */
-.spinner{
-  width:18px;height:18px;
-  border:2px solid rgba(255,255,255,0.35);
-  border-top-color:#fff;
-  border-radius:50%;
-  animation:spin 0.7s linear infinite;
-  display:none;flex-shrink:0;
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  -webkit-animation: spin 0.7s linear infinite;
+  animation: spin 0.7s linear infinite;
+  display: none;
+  -webkit-flex-shrink: 0;
+  flex-shrink: 0;
 }
-@keyframes spin{to{transform:rotate(360deg);}}
+@-webkit-keyframes spin { to { -webkit-transform: rotate(360deg); } }
+@keyframes spin         { to { transform: rotate(360deg); } }
 
 /* ===== CHECKMARK ===== */
-.check-circle{width:18px;height:18px;display:none;flex-shrink:0;}
-.check-circle svg{width:18px;height:18px;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;fill:none;}
-.check-path{stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset 0.35s ease 0.1s;}
+.check-wrap {
+  display: none;
+  width: 22px;
+  height: 22px;
+  -webkit-flex-shrink: 0;
+  flex-shrink: 0;
+}
+.check-wrap svg {
+  width: 22px;
+  height: 22px;
+  stroke: #fff;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+.check-path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  -webkit-transition: stroke-dashoffset 0.35s ease 0.1s;
+  transition: stroke-dashoffset 0.35s ease 0.1s;
+}
+.check-path.drawn { stroke-dashoffset: 0; }
 
-/* ===== SHAKE (error) ===== */
-@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-5px);}80%{transform:translateX(5px);};}
+/* ===== SHAKE ===== */
+@-webkit-keyframes shake {
+  0%,100%{ -webkit-transform: translateX(0); }
+  20%    { -webkit-transform: translateX(-8px); }
+  40%    { -webkit-transform: translateX(8px); }
+  60%    { -webkit-transform: translateX(-5px); }
+  80%    { -webkit-transform: translateX(5px); }
+}
+@keyframes shake {
+  0%,100%{ transform: translateX(0); }
+  20%    { transform: translateX(-8px); }
+  40%    { transform: translateX(8px); }
+  60%    { transform: translateX(-5px); }
+  80%    { transform: translateX(5px); }
+}
+.shake { -webkit-animation: shake 0.4s ease !important; animation: shake 0.4s ease !important; }
 
-.logout{background:transparent;border:1px solid #ddd;padding:8px 12px;border-radius:10px;font-size:13px;color:#666;cursor:pointer;}
-.msg{height:22px;margin-top:14px;text-align:center;font-weight:700;font-size:14px;}
-.footer-image{margin-top:14px;margin-bottom:10px;text-align:center;}
-.footer-image img{width:100%;max-width:220px;height:auto;}
-.small-muted{font-size:13px;color:var(--muted);text-align:center;margin-top:10px;}
+.logout {
+  background: transparent;
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-family: 'Cairo', sans-serif;
+  color: #666;
+  cursor: pointer;
+}
+
+.msg { min-height: 22px; margin-top: 14px; text-align: center; font-weight: 700; font-size: 14px; }
+.footer-image { margin-top: 14px; margin-bottom: 10px; text-align: center; }
+.footer-image img { width: 100%; max-width: 220px; height: auto; }
+.small-muted { font-size: 13px; color: var(--muted); text-align: center; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -72,8 +196,7 @@ html,body{margin:0;background:var(--bg);font-family:'Cairo',sans-serif;color:#11
 <main class="container">
   <section class="card">
 
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div></div>
+    <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:end;-webkit-justify-content:flex-end;justify-content:flex-end;">
       <button class="logout" onclick="logout()">Logout</button>
     </div>
 
@@ -94,132 +217,179 @@ html,body{margin:0;background:var(--bg);font-family:'Cairo',sans-serif;color:#11
 
     <div class="controls">
       <button class="btn-full" id="btnIN" style="background:linear-gradient(135deg,#A666B0,#C28AD0)" onclick="send('IN')">
-        <div class="spinner" id="spIN"></div>
-        <div class="check-circle" id="ckIN"><svg viewBox="0 0 20 20"><polyline class="check-path" id="cpIN" points="4,10 8,14 16,6"/></svg></div>
-        <span id="txtIN">IN</span>
+        <div class="btn-inner">
+          <div class="spinner" id="spIN"></div>
+          <div class="check-wrap" id="ckIN">
+            <svg viewBox="0 0 22 22"><polyline class="check-path" id="cpIN" points="4,11 9,16 18,6"/></svg>
+          </div>
+          <span id="txtIN">IN</span>
+        </div>
       </button>
       <button class="btn-full" id="btnOUT" style="background:linear-gradient(135deg,#7457B0,#573B92)" onclick="send('OUT')">
-        <div class="spinner" id="spOUT"></div>
-        <div class="check-circle" id="ckOUT"><svg viewBox="0 0 20 20"><polyline class="check-path" id="cpOUT" points="4,10 8,14 16,6"/></svg></div>
-        <span id="txtOUT">OUT</span>
+        <div class="btn-inner">
+          <div class="spinner" id="spOUT"></div>
+          <div class="check-wrap" id="ckOUT">
+            <svg viewBox="0 0 22 22"><polyline class="check-path" id="cpOUT" points="4,11 9,16 18,6"/></svg>
+          </div>
+          <span id="txtOUT">OUT</span>
+        </div>
       </button>
     </div>
 
     <div id="msg" class="msg"></div>
-    <div class="footer-image"><img src="logooo.png" alt="Logooo"></div>
+    <div class="footer-image"><img src="logooo.png" alt="Logo"></div>
     <div class="small-muted" id="who"></div>
 
   </section>
 </main>
 
 <script>
-const API  = "https://script.google.com/macros/s/AKfycbwkszxNpvH5Qib5JS6T3VEqMKzRJPU3EY7eVLt1_0tnL1N_drqBVBGC99vITMemxfuyCA/exec";
-const ID   = localStorage.getItem("ID");
-const NAME = localStorage.getItem("name") || ID;
+var API  = "https://script.google.com/macros/s/AKfycbwkszxNpvH5Qib5JS6T3VEqMKzRJPU3EY7eVLt1_0tnL1N_drqBVBGC99vITMemxfuyCA/exec";
+var ID   = localStorage.getItem("ID");
+var NAME = localStorage.getItem("name") || ID;
 
-if(!ID) location.href="login.html";
+if(!ID) location.href = "login.html";
 document.getElementById("who").textContent = NAME;
 
-function getDevice(){const ua=navigator.userAgent;if(/android/i.test(ua))return"Android";if(/iphone|ipad|ipod/i.test(ua))return"iOS";if(/windows/i.test(ua))return"Windows";if(/mac/i.test(ua))return"MacOS";return"Unknown";}
-function getBrowser(){const ua=navigator.userAgent;if(ua.includes("Chrome"))return"Chrome";if(ua.includes("Safari")&&!ua.includes("Chrome"))return"Safari";if(ua.includes("Firefox"))return"Firefox";if(ua.includes("Edg"))return"Edge";return"Unknown";}
-async function getIP(){try{let r=await fetch("https://api.ipify.org?format=json");let j=await r.json();return j.ip||"";}catch(e){return"";}}
-function logout(){localStorage.removeItem("ID");localStorage.removeItem("name");location.href="login.html";}
+function getDevice(){
+  var ua = navigator.userAgent;
+  if(/android/i.test(ua))       return "Android";
+  if(/iphone|ipad|ipod/i.test(ua)) return "iOS";
+  if(/windows/i.test(ua))       return "Windows";
+  if(/mac/i.test(ua))           return "MacOS";
+  return "Unknown";
+}
+function getBrowser(){
+  var ua = navigator.userAgent;
+  if(ua.indexOf("Chrome")  > -1 && ua.indexOf("Edg") === -1) return "Chrome";
+  if(ua.indexOf("Safari")  > -1 && ua.indexOf("Chrome") === -1) return "Safari";
+  if(ua.indexOf("Firefox") > -1) return "Firefox";
+  if(ua.indexOf("Edg")     > -1) return "Edge";
+  return "Unknown";
+}
+function getIP(){
+  return fetch("https://api.ipify.org?format=json")
+    .then(function(r){ return r.json(); })
+    .then(function(j){ return j.ip || ""; })
+    .catch(function(){ return ""; });
+}
+function logout(){
+  localStorage.removeItem("ID");
+  localStorage.removeItem("name");
+  location.href = "login.html";
+}
 
-// ===== UI Helpers =====
 function setLoading(type){
-  const btn = document.getElementById('btn'+type);
-  const sp  = document.getElementById('sp'+type);
-  const txt = document.getElementById('txt'+type);
-  const other = document.getElementById('btn'+(type==='IN'?'OUT':'IN'));
-  btn.disabled = true;
+  var btn   = document.getElementById('btn'+type);
+  var sp    = document.getElementById('sp'+type);
+  var txt   = document.getElementById('txt'+type);
+  var other = document.getElementById('btn'+(type==='IN'?'OUT':'IN'));
+  btn.disabled   = true;
   other.disabled = true;
   sp.style.display = 'block';
-  txt.textContent = 'Sending...';
-  txt.style.opacity = '0.7';
+  txt.textContent  = 'Sending...';
+  txt.style.opacity = '0.75';
+  document.getElementById('msg').textContent = '';
 }
 
 function setSuccess(type){
-  const btn = document.getElementById('btn'+type);
-  const sp  = document.getElementById('sp'+type);
-  const ck  = document.getElementById('ck'+type);
-  const cp  = document.getElementById('cp'+type);
-  const txt = document.getElementById('txt'+type);
-  const msg = document.getElementById('msg');
+  var btn = document.getElementById('btn'+type);
+  var sp  = document.getElementById('sp'+type);
+  var ck  = document.getElementById('ck'+type);
+  var cp  = document.getElementById('cp'+type);
+  var txt = document.getElementById('txt'+type);
+  var msg = document.getElementById('msg');
   sp.style.display = 'none';
   btn.classList.add('success');
   ck.style.display = 'block';
-  setTimeout(()=>{ cp.style.strokeDashoffset='0'; }, 50);
-  txt.textContent = type==='IN' ? 'Checked IN!' : 'Checked OUT!';
+  setTimeout(function(){ cp.classList.add('drawn'); }, 60);
+  txt.textContent   = type==='IN' ? 'Checked IN!' : 'Checked OUT!';
   txt.style.opacity = '1';
-  msg.style.color = '#2e7d32';
-  msg.textContent = 'Attendance added successfully';
+  msg.style.color   = '#2e7d32';
+  msg.textContent   = 'Attendance added successfully';
 }
 
 function setError(type, text){
-  const btn = document.getElementById('btn'+type);
-  const sp  = document.getElementById('sp'+type);
-  const txt = document.getElementById('txt'+type);
-  const other = document.getElementById('btn'+(type==='IN'?'OUT':'IN'));
-  const msg = document.getElementById('msg');
+  var btn   = document.getElementById('btn'+type);
+  var sp    = document.getElementById('sp'+type);
+  var ck    = document.getElementById('ck'+type);
+  var txt   = document.getElementById('txt'+type);
+  var other = document.getElementById('btn'+(type==='IN'?'OUT':'IN'));
+  var msg   = document.getElementById('msg');
   sp.style.display = 'none';
-  txt.textContent = type;
+  ck.style.display = 'none';
+  btn.classList.remove('success');
+  txt.textContent   = type;
   txt.style.opacity = '1';
-  btn.disabled = false;
-  other.disabled = false;
-  btn.style.animation = 'none';
-  btn.offsetHeight;
-  btn.style.animation = 'shake 0.4s ease';
-  msg.style.color = 'red';
-  msg.textContent = text;
+  btn.disabled      = false;
+  other.disabled    = false;
+  btn.classList.remove('shake');
+  void btn.offsetWidth;
+  btn.classList.add('shake');
+  msg.style.color   = 'red';
+  msg.textContent   = text;
 }
 
-// ===== SEND =====
-async function send(type){
-  const loc = document.getElementById("location").value;
-  const msg = document.getElementById("msg");
+function send(type){
+  var loc = document.getElementById("location").value;
+  var msg = document.getElementById("msg");
 
-  if(!loc){ msg.style.color="red"; msg.textContent="Please select a location!"; return; }
+  if(!loc){
+    msg.style.color  = "red";
+    msg.textContent  = "Please select a location!";
+    return;
+  }
 
-  msg.textContent = '';
   setLoading(type);
 
-  const ip = await getIP();
+  getIP().then(function(ip){
+    navigator.geolocation.getCurrentPosition(
+      function(pos){
+        var payload = {
+          action: "attendance",
+          ID: ID,
+          name: NAME,
+          type: type,
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+          acc: pos.coords.accuracy,
+          device: getDevice(),
+          browser: getBrowser(),
+          location: loc,
+          ip: ip
+        };
 
-  navigator.geolocation.getCurrentPosition(async pos => {
-    const payload = {
-      action:"attendance", ID, name:NAME, type,
-      lat:pos.coords.latitude, lon:pos.coords.longitude, acc:pos.coords.accuracy,
-      device:getDevice(), browser:getBrowser(), location:loc, ip
-    };
-
-    try{
-      const res = await fetch(API,{method:"POST",body:JSON.stringify(payload)});
-      const j   = await res.json();
-
-      if(j.status==="fail" || j.message==="outside_location_range"){
-        setError(type,"Fake Location Attempt Blocked!");
-        setTimeout(()=>logout(), 1500);
-        return;
-      }
-      if(j.message==="no_gps"){ setError(type,"GPS not available — enable location!"); return; }
-
-      if(j.status==="saved"){
-        setSuccess(type);
-        setTimeout(()=>logout(), 2000);
-      }
-    }catch(e){ setError(type,"Connection Error"); }
-
-  }, err=>{ setError(type,"GPS access denied"); },
-  {enableHighAccuracy:true,maximumAge:0,timeout:8000});
+        fetch(API, { method: "POST", body: JSON.stringify(payload) })
+          .then(function(res){ return res.json(); })
+          .then(function(j){
+            if(j.status==="fail" || j.message==="outside_location_range"){
+              setError(type, "Fake Location Attempt Blocked!");
+              setTimeout(logout, 1500);
+              return;
+            }
+            if(j.message==="no_gps"){ setError(type, "GPS not available!"); return; }
+            if(j.status==="saved"){
+              setSuccess(type);
+              setTimeout(logout, 2200);
+            }
+          })
+          .catch(function(){ setError(type, "Connection Error"); });
+      },
+      function(){ setError(type, "GPS access denied"); },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 8000 }
+    );
+  });
 }
 
-// ===== AUTO LOGOUT =====
-let inactivityTimer;
-function resetInactivityTimer(){clearTimeout(inactivityTimer);inactivityTimer=setTimeout(logout,10*60*1000);}
-document.addEventListener("click",resetInactivityTimer);
-document.addEventListener("touchstart",resetInactivityTimer);
-document.addEventListener("mousemove",resetInactivityTimer);
-document.addEventListener("keydown",resetInactivityTimer);
+var inactivityTimer;
+function resetInactivityTimer(){
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(logout, 10*60*1000);
+}
+document.addEventListener("click",      resetInactivityTimer);
+document.addEventListener("touchstart", resetInactivityTimer);
+document.addEventListener("mousemove",  resetInactivityTimer);
+document.addEventListener("keydown",    resetInactivityTimer);
 resetInactivityTimer();
 </script>
 </body>
