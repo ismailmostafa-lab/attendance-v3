@@ -334,6 +334,15 @@ html, body {
       </div>
       <span style="color:#573B92;">Please select a location!</span>
     </div>
+    <div class="pulse-msg" id="connMsg">
+      <div class="pulse-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c62828" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="1" y1="1" x2="23" y2="23"/>
+          <path d="M16.72 11.06A10.94 10.94 0 0119 12.55M5 12.55a10.94 10.94 0 015.17-2.39M10.71 5.05A16 16 0 0122.56 9M1.42 9a15.91 15.91 0 014.7-2.88M12 20h.01"/>
+        </svg>
+      </div>
+      Connection Error
+    </div>
     <div class="footer-image"><img src="logooo.png" alt="Logo"></div>
     <div class="small-muted" id="who"></div>
 
@@ -429,7 +438,8 @@ function setError(type, text, isFake){
   msg.textContent = '';
   fakeMsg.style.display = 'none';
   gpsMsg.style.display  = 'none';
-  document.getElementById('locMsg').style.display = 'none';
+  document.getElementById('locMsg').style.display  = 'none';
+  document.getElementById('connMsg').style.display = 'none';
 
   if(isFake === true){
     void fakeMsg.offsetWidth;
@@ -437,6 +447,10 @@ function setError(type, text, isFake){
   } else if(isFake === 'gps'){
     void gpsMsg.offsetWidth;
     gpsMsg.style.display = 'block';
+  } else if(isFake === 'conn'){
+    var connMsg = document.getElementById('connMsg');
+    void connMsg.offsetWidth;
+    connMsg.style.display = 'block';
   } else {
     msg.style.color = 'red';
     msg.textContent = text;
@@ -487,7 +501,7 @@ function send(type){
               setTimeout(logout, 2200);
             }
           })
-          .catch(function(){ setError(type, "Connection Error"); });
+          .catch(function(){ setError(type, "", 'conn'); });
       },
       function(){ setError(type, "", 'gps'); },
       { enableHighAccuracy: true, maximumAge: 0, timeout: 8000 }
