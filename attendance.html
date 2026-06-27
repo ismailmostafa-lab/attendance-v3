@@ -315,6 +315,16 @@ html, body {
       </div>
       Fake Location Attempt Blocked!
     </div>
+    <div class="pulse-msg" id="gpsMsg">
+      <div class="pulse-icon-wrap" style="background:#e3f2fd;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+          <line x1="3" y1="3" x2="21" y2="21"/>
+        </svg>
+      </div>
+      <span style="color:#0d47a1;">GPS access denied</span>
+    </div>
     <div class="footer-image"><img src="logooo.png" alt="Logo"></div>
     <div class="small-muted" id="who"></div>
 
@@ -395,6 +405,7 @@ function setError(type, text, isFake){
   var other = document.getElementById('btn'+(type==='IN'?'OUT':'IN'));
   var msg   = document.getElementById('msg');
   var fakeMsg = document.getElementById('fakeMsg');
+  var gpsMsg  = document.getElementById('gpsMsg');
   sp.style.display = 'none';
   ck.style.display = 'none';
   btn.classList.remove('success');
@@ -406,15 +417,19 @@ function setError(type, text, isFake){
   void btn.offsetWidth;
   btn.classList.add('shake');
 
-  if(isFake){
-    msg.textContent = '';
-    fakeMsg.style.display = 'none';
+  msg.textContent = '';
+  fakeMsg.style.display = 'none';
+  gpsMsg.style.display  = 'none';
+
+  if(isFake === true){
     void fakeMsg.offsetWidth;
     fakeMsg.style.display = 'block';
+  } else if(isFake === 'gps'){
+    void gpsMsg.offsetWidth;
+    gpsMsg.style.display = 'block';
   } else {
-    fakeMsg.style.display = 'none';
-    msg.style.color   = 'red';
-    msg.textContent   = text;
+    msg.style.color = 'red';
+    msg.textContent = text;
   }
 }
 
@@ -463,7 +478,7 @@ function send(type){
           })
           .catch(function(){ setError(type, "Connection Error"); });
       },
-      function(){ setError(type, "GPS access denied"); },
+      function(){ setError(type, "", 'gps'); },
       { enableHighAccuracy: true, maximumAge: 0, timeout: 8000 }
     );
   });
