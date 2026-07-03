@@ -379,6 +379,15 @@ function getIP(){
     .then(function(j){ return j.ip || ""; })
     .catch(function(){ return ""; });
 }
+function getPosition(){
+  return new Promise(function(resolve, reject){
+    navigator.geolocation.getCurrentPosition(
+      function(pos){ resolve(pos); },
+      function(err){ reject({ gpsError: true, original: err }); },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 8000 }
+    );
+  });
+}
 function logout(){
   localStorage.removeItem("ID");
   localStorage.removeItem("name");
@@ -470,43 +479,46 @@ function send(type){
 
   setLoading(type);
 
-  getIP().then(function(ip){
-    navigator.geolocation.getCurrentPosition(
-      function(pos){
-        var payload = {
-          action: "attendance",
-          ID: ID,
-          name: NAME,
-          type: type,
-          lat: pos.coords.latitude,
-          lon: pos.coords.longitude,
-          acc: pos.coords.accuracy,
-          device: getDevice(),
-          browser: getBrowser(),
-          location: loc,
-          ip: ip
-        };
+  // getIP() و getPosition() بيشتغلوا في نفس الوقت (Parallel) بدل ما الواحد يستنى التاني
+  Promise.all([ getIP(), getPosition() ])
+    .then(function(results){
+      var ip  = results[0];
+      var pos = results[1];
 
-        fetch(API, { method: "POST", body: JSON.stringify(payload) })
-          .then(function(res){ return res.json(); })
-          .then(function(j){
-            if(j.status==="fail" || j.message==="outside_location_range"){
-              setError(type, "", true);
-              setTimeout(logout, 2500);
-              return;
-            }
-            if(j.message==="no_gps"){ setError(type, "GPS not available!"); return; }
-            if(j.status==="saved"){
-              setSuccess(type);
-              setTimeout(logout, 2200);
-            }
-          })
-          .catch(function(){ setError(type, "", 'conn'); });
-      },
-      function(){ setError(type, "", 'gps'); },
-      { enableHighAccuracy: true, maximumAge: 0, timeout: 8000 }
-    );
-  });
+      var payload = {
+        action: "attendance",
+        ID: ID,
+        name: NAME,
+        type: type,
+        lat: pos.coords.latitude,
+        lon: pos.coords.longitude,
+        acc: pos.coords.accuracy,
+        device: getDevice(),
+        browser: getBrowser(),
+        location: loc,
+        ip: ip
+      };
+
+      fetch(API, { method: "POST", body: JSON.stringify(payload) })
+        .then(function(res){ return res.json(); })
+        .then(function(j){
+          if(j.status==="fail" || j.message==="outside_location_range"){
+            setError(type, "", true);
+            setTimeout(logout, 2500);
+            return;
+          }
+          if(j.message==="no_gps"){ setError(type, "GPS not available!"); return; }
+          if(j.status==="saved"){
+            setSuccess(type);
+            setTimeout(logout, 2200);
+          }
+        })
+        .catch(function(){ setError(type, "", 'conn'); });
+    })
+    .catch(function(){
+      // فشل الحصول على الموقع (رفض الإذن أو timeout)
+      setError(type, "", 'gps');
+    });
 }
 
 var inactivityTimer;
