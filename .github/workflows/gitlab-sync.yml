@@ -29,4 +29,4 @@ jobs:
           git remote add gitlab "https://${GITLAB_USERNAME}:${GITLAB_TOKEN}@${REPO_URL}" || true
 
           git push --force gitlab main
-          git push gitlab --tags
+          git push --force gitlab --tags
